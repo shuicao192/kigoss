@@ -35,8 +35,8 @@
       update_time)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
-      #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, now(),
+      now())
   </insert>
   <insert id="insertSelective" parameterType="com.kigoss.pojo.User" >
     insert into mmall_user
@@ -133,7 +133,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_time = now(),
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -148,7 +148,63 @@
       answer = #{answer,jdbcType=VARCHAR},
       role = #{role,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="checkUserName" parameterType="string" resultType="int">
+      SELECT count(1) FROM mmall_user WHERE username =#{userName}
+  </select>
+
+  <select id="checkEmail" parameterType="String" resultType="int">
+    SELECT count(1) FROM mmall_user WHERE email =#{email}
+  </select>
+
+  <select id="checkPhoneNumber" parameterType="String" resultType="int">
+    SELECT count(1) FROM mmall_user WHERE phone =#{phone}
+  </select>
+
+  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+      SELECT <include refid="Base_Column_List"/>
+      FROM mmall_user
+      WHERE username=#{userName}
+      and password=#{password}
+  </select>
+
+  <!--String selectQustion(String usename);-->
+  <select id="selectQustion" resultType="string" parameterType="string">
+    SELECT question
+    FROM mmall_user
+    WHERE username=#{userName}
+  </select>
+
+  <!--int checkAnswer(String usename, String answer);-->
+  <select id="checkAnswer" resultType="int" parameterType="map">
+     SELECT count(1)
+     FROM mmall_user
+     WHERE username =#{userName}
+     and answer=#{answer}
+  </select>
+  <!--updataPassword(@Param("userName") String userName,@Param("passwordCode") String passwordCode);-->
+  <update id="updatePassword" parameterType="map">
+    UPDATE mmall_user
+    SET password=#{passwordCode},update_time=now()
+    where userName=#{userName}
+  </update>
+
+  <!--checkUserPassword(@Param("password") String password,@Param("userId") Integer userId);-->
+  <select id="checkUserPassword" resultType="int" parameterType="map">
+    SELECT count(1)
+    FROM mmall_user
+    WHERE password=#{password}
+    and id=#{userId}
+  </select>
+
+  <!--int checkEmailById(Integer id, String email);-->
+  <select id="checkEmailById" resultType="int" parameterType="map">
+    SELECT count(1)
+    FROM mmall_user
+    WHERE email=#{email}
+    and id !=#{id};
+  </select>
 </mapper>
