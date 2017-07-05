@@ -35,7 +35,7 @@ public class UserController {
     @ResponseBody
     public ServerResponse<String> logout(HttpSession session){
         session.removeAttribute(Constant.CURRENT_USER);
-        return ServerResponse.creatBySuccess();
+        return ServerResponse.creatBySuccessMessage("退出登录成功");
     }
 
     @RequestMapping(value = "registor.do",method = RequestMethod.POST)

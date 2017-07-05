@@ -27,11 +27,11 @@
   </delete>
   <insert id="insert" parameterType="com.kigoss.pojo.Category" >
     insert into mmall_category (id, parent_id, name, 
-      status, sort_order, create_time, 
+      status, sort_order, create_time,
       update_time)
     values (#{id,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
-      #{status,jdbcType=BIT}, #{sortOrder,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{status,jdbcType=BIT}, #{sortOrder,jdbcType=INTEGER}, now(),
+      now())
   </insert>
   <insert id="insertSelective" parameterType="com.kigoss.pojo.Category" >
     insert into mmall_category
@@ -101,7 +101,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_time = now(),
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -116,4 +116,13 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--List<Category> selectChildrenByPrimaryKey(Integer categoryId);-->
+  
+  <select id="selectChildrenByPrimaryKey" parameterType="int" resultMap="BaseResultMap">
+      SELECT
+      <include refid="Base_Column_List"/>
+     from mmall_category
+     where parent_id = #{parentId}
+  </select>
 </mapper>

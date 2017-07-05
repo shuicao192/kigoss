@@ -190,4 +190,12 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(StringUtils.EMPTY);
         return ServerResponse.creatBySuccessData(user);
     }
+
+    @Override
+    public ServerResponse<String> checkRoll(User user) {
+        if(user.getRole()==Constant.Role.ROLE_ADMIN){
+            return ServerResponse.creatBySuccess();
+        }
+        return ServerResponse.creatByErrorMassage("用户权限不够");
+    }
 }
