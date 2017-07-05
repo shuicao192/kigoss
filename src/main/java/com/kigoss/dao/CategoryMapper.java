@@ -2,6 +2,9 @@ package com.kigoss.dao;
 
 import com.kigoss.pojo.Category;
 
+import java.util.List;
+import java.util.Set;
+
 public interface CategoryMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +17,6 @@ public interface CategoryMapper {
     int updateByPrimaryKeySelective(Category record);
 
     int updateByPrimaryKey(Category record);
+
+    List<Category> selectChildrenByPrimaryKey(Integer categoryId);
 }
